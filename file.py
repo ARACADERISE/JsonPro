@@ -25,6 +25,9 @@ def inject_default_setting():
   global DEFAULT_DATA
   global USERS_DIR
 
+  if not os.path.exists('db.json'):
+    raise FileNotFoundError("OOPS! There was an error finding db.json. please delete NewJson and git-clone it again")
+
   opened_db_file = open('db.json','r').read()
   DB_JSON_DATA = json.loads(opened_db_file)
 
