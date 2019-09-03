@@ -28,11 +28,11 @@ def inject_default_setting():
   if not os.path.exists(USERS_DIR+'db.json'):
     print("There was an error finding " + USERS_DIR+'db.json' + "\nRE-INSTALLING..\n\n")
     time.sleep(4)
-    os.system('rm -rf NewJson && clear && git clone https://github.com/ARACADERISE/NewJson && clear && cd NewJson && python file.py')
+    os.system('cd && rm -rf NewJson && clear && git clone https://github.com/ARACADERISE/NewJson && clear && cd NewJson && python file.py')
   if not os.path.exists(USERS_DIR+'setup.json'):
     print("There was an error finding " + USERS_DIR+'setup.json' + "\nRE-INSTALLING..\n\n")
     time.sleep(4)
-    os.system('rm -rf NewJson && clear && git clone https://github.com/ARACADERISE/NewJson && clear && cd NewJson && python file.py')
+    os.system('cd && rm -rf NewJson && clear && git clone https://github.com/ARACADERISE/NewJson && clear && cd NewJson && python file.py')
 
   opened_db_file = open('db.json','r').read()
   DB_JSON_DATA = json.loads(opened_db_file)
