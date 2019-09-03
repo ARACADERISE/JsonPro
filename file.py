@@ -60,7 +60,7 @@ def inject_default_setting():
         to_json = json.dumps(REPLACE)
         file.write(to_json)
         file.close()
-      raise Exception("\n\nCannot execute due to transparent data being same as injection:\n"+str(DEFAULT_DATA['original_file_data'])+"\n\n"+FILE_DIR[0]+" has been rendered back to {}. please go back to github and edit the file. \n\nHINT: delete the pre-existing setup.json on github, make sure to copy pre-json-code that you had typed, make a new setup.json, and paste the pre-existing code.")
+      raise Exception("\n\nCannot execute due to transparent data being same as injection:\n"+str(DEFAULT_DATA['original_file_data'])+"\n\n"+FILE_DIR[0]+" (or setup.json) has been rendered back to {}. please go back to github and edit the file. \n\nHINT: delete the pre-existing setup.json on github, make sure to copy pre-json-code that you had typed, make a new setup.json, and paste the pre-existing code.")
     DB_JSON_DATA['setup_file_info'].append({"default_setup_file_name":f'{file_name}',"valid":True,"setup.json::-->FILE_INFO":DEFAULT_DATA['original_file_data']})
 
     op = open('db.json','w')
