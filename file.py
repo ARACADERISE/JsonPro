@@ -26,13 +26,11 @@ def inject_default_setting():
   global USERS_DIR
 
   if not os.path.exists(USERS_DIR+'db.json'):
-    print("There was an error finding " + USERS_DIR+'db.json' + "\nRE-INSTALLING..\n\n")
     time.sleep(4)
-    os.system('cd && rm -rf NewJson && git clone https://github.com/ARACADERISE/NewJson && cd NewJson && python file.py')
+    raise Exception("There was an error finding the directory " + USERS_DIR+'db.json' + ". Please delete NewJson and git-clone it again")
   if not os.path.exists(USERS_DIR+'setup.json'):
-    print("There was an error finding " + USERS_DIR+'setup.json' + "\nRE-INSTALLING..\n\n")
     time.sleep(4)
-    os.system('cd && rm -rf NewJson && git clone https://github.com/ARACADERISE/NewJson && cd NewJson && python file.py')
+    raise Exception("There was an error finding the directory " + USERS_DIR+'db.json' + ". Please delete NewJson and git-clone it again")
 
   opened_db_file = open('db.json','r').read()
   DB_JSON_DATA = json.loads(opened_db_file)
