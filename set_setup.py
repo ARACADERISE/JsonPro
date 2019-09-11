@@ -2,12 +2,12 @@ import os, json
 
 # This file will read "setup.json" for anything important
 # Most likely the whole file will be important since it's the setup for "NewJson"
-# @NOTE: If there are no "ALERTS" in "setup.json" this file will run, yet not do anything
 
 note_to_all_users = {}
 reset_data = {}
 
-def get_notes_in_setup(data_to_upd,file_dir):
+# @NOTE: If there are no "ALERTS" in "setup.json" this function will run, yet not do anything
+def get_alerts_in_setup(data_to_upd,file_dir):
   global note_to_all_users
   global reset_data
 
