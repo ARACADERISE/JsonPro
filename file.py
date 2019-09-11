@@ -1,10 +1,11 @@
 import sys, os, json, time
+from set_setup import *
 
 # Getting the users directory
 USERS_DIR = str(sys.path[0])
 USERS_DIR = os.path.join(USERS_DIR,"")
 FILE_NAME = ""
-DEFAULT_DATA = {"WARNING":"DO NOT DELETE ANY INFORMATION IN THIS FILE AFTER YOU'VE ALREADY HAD THE PROGRAM IMPLEMENT DATA INTO IT","DEFAULT":{"return_types":["true","false"]}}
+DEFAULT_DATA = {"WARNING(S)":["DO NOT DELETE ANY INFORMATION IN THIS FILE AFTER YOU'VE ALREADY HAD THE PROGRAM IMPLEMENT DATA INTO IT"],"DEFAULT":{"return_types":["true","false"]}}
 FILE_DIR = []
 
 def connect_to_your_file(file_name):
@@ -46,6 +47,8 @@ def inject_default_setting():
       raise FileNotFoundError("Error: " + PATH_OF_FILE + " not a directory")
     elif file_name == 'setup.json' and os.path.exists(PATH_OF_FILE):
       FILE_DIR = [USERS_DIR+file_name]
+      # Checks for "note_to_all_users" within the "setup.json"
+      get_notes_in_setup(DEFAULT_DATA,FILE_DIR[0])
       DEFAULT_DATA.update({"original_file_data":json.loads(open(FILE_DIR[0],'r').read())})
     else:
       raise NameError("setup.json name expected, got " + file_name)
