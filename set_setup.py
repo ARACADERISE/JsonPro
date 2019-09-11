@@ -24,7 +24,7 @@ class read_setup_file:
 
       for i in ALERTS:
         if ALERTS[i] == ALERTS['info']:
-          self.data_to_upd['WARNING(S)'].append(ALERTS['info'])
+          self.data_to_upd['WARNING(S)'].append(ALERTS[i])
 
     # Reseting the file
     with open(self.file_dir,'w') as file:
