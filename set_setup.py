@@ -11,7 +11,7 @@ class read_setup_file:
     self.data_to_upd = data_to_upd
     self.file_dir = file_dir
 
-  # @NOTE: If there are no "ALERTS" in "setup.json" this file will run, yet not do anything
+  # @NOTE: If there are no "ALERTS" in "setup.json" this class-function will run, yet not do anything
   def get_alerts_in_setup(self):
     global ALERTS
     global reset_data
