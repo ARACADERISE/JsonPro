@@ -48,7 +48,7 @@ def inject_default_setting():
     elif file_name == 'setup.json' and os.path.exists(PATH_OF_FILE):
       FILE_DIR = [USERS_DIR+file_name]
       # Checks for "note_to_all_users" within the "setup.json"
-      get_alerts_in_setup(DEFAULT_DATA,FILE_DIR[0])
+      get_alerts(DEFAULT_DATA,FILE_DIR[0])
       DEFAULT_DATA.update({"original_file_data":json.loads(open(FILE_DIR[0],'r').read())})
     else:
       raise NameError("setup.json name expected, got " + file_name)
