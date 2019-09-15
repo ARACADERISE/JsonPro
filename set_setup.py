@@ -22,9 +22,10 @@ class read_setup_file:
     if '"ALERTS":{' in open(self.file_dir,'r').read():
       ALERTS.update({'info':opened_file})
 
-      for i in ALERTS:
-        if ALERTS[i] == ALERTS['info']:
-          self.data_to_upd['WARNING(S)'].append(ALERTS[i])
+      if 'note_to_all_users' in ALERTS['info']['ALERTS'] or "'note_to_all_users':[" or "'note_to_all_users':{" in ALERTS['info']['ALERTS']:
+        for i in ALERTS:
+          if ALERTS[i] == ALERTS['info']:
+            self.data_to_upd['WARNING(S)'].append(ALERTS['info']['ALERTS'])
 
     # Reseting the file
     with open(self.file_dir,'w') as file:
