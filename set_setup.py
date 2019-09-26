@@ -15,7 +15,7 @@ class read_setup_file:
   # @NOTE: If there are no "ALERTS" in "setup.json" this class-function will run, yet not do anything
   def get_alerts_in_setup(self):
     global ALERTS
-    #global reset_data
+    global reset_data
     global write_
 
     if '"ALERTS":{' in self.data:
@@ -45,7 +45,7 @@ class read_setup_file:
       self.data.update({'EXTENDED_DATA':[{'CREATED_FILE_DATA':None,'ALERTS_DATA':None}]})
     # Reseting the file
     with open('setup.json','w') as file:
-      to_json = json.dumps(self.data,indent=2,sort_keys=False)
+      to_json = json.dumps(reset_data,indent=2,sort_keys=False)
       file.write(to_json)
       file.close()
 
