@@ -5,7 +5,7 @@ from set_setup import *
 USERS_DIR = str(sys.path[0])
 USERS_DIR = os.path.join(USERS_DIR,"")
 FILE_NAME = ""
-DEFAULT_DATA = {"WARNING(S)":["DO NOT DELETE ANY INFORMATION IN THIS FILE AFTER YOU'VE ALREADY HAD THE PROGRAM IMPLEMENT DATA INTO IT"],"DEFAULT":{"return_types":["true","false"]}}
+DEFAULT_DATA = {"WARNING":["DO NOT DELETE ANY INFORMATION IN THIS FILE AFTER YOU'VE ALREADY HAD THE PROGRAM IMPLEMENT DATA INTO IT"],"DEFAULT":{"return_types":["true","false"]}}
 FILE_DIR = []
 
 def connect_to_your_file(file_name):
@@ -47,9 +47,15 @@ def inject_default_setting():
       raise FileNotFoundError("Error: " + PATH_OF_FILE + " not a directory")
     elif file_name == 'setup.json' and os.path.exists(PATH_OF_FILE):
       FILE_DIR = [USERS_DIR+file_name]
-      # Checks for "note_to_all_users" within the "setup.json"
-      get_alerts(DEFAULT_DATA,FILE_DIR[0])
+      store = {'stored':json.loads(open(FILE_DIR[0],'r').read())}
       DEFAULT_DATA.update({"original_file_data":json.loads(open(FILE_DIR[0],'r').read())})
+      get_alerts(DEFAULT_DATA,store['stored'])
+      if 'CREATE' in DEFAULT_DATA['original_file_data']:
+        DEFAULT_DATA.update({'CREATED_FILE_DATA':DEFAULT_DATA['original_file_data']['CREATE']})
+        del(DEFAULT_DATA['original_file_data']['CREATE'])
+      if 'ALERTS' in DEFAULT_DATA['original_file_data']:
+        DEFAULT_DATA.update({'ALERTS_DATA':DEFAULT_DATA['original_file_data']['ALERTS']})
+        del(DEFAULT_DATA['original_file_data']['ALERTS'])
     else:
       raise NameError("setup.json name expected, got " + file_name)
     if not 'DEFAULT' in open(FILE_DIR[0],'r').read() or not '"original_file_data"' in open(FILE_DIR[0],'r').read():
@@ -64,7 +70,7 @@ def inject_default_setting():
           break
       except NameError as n_e:
         print(n_e)
-    if 'WARNING' in DEFAULT_DATA['original_file_data']:
+    if 'ALERT' in DEFAULT_DATA['original_file_data']:
       with open(FILE_DIR[0],'w') as file:
         REPLACE = {}
         to_json = json.dumps(REPLACE)
