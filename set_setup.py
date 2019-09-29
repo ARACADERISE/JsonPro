@@ -5,6 +5,7 @@ import os, json
 
 ALERTS = {}
 reset_data = {}
+TO_IGNORE = []
 write_ = ""
 
 class read_setup_file:
@@ -17,6 +18,7 @@ class read_setup_file:
     global ALERTS
     global reset_data
     global write_
+    global TO_IGNORE
 
     if '"ALERTS":{' in self.data:
       ALERTS.update({'info':self.data})
@@ -26,21 +28,32 @@ class read_setup_file:
           if ALERTS[i] == ALERTS['info']:
             self.data_to_upd['WARNING(S)'].append(ALERTS['info']['ALERTS'])
         self.data.update({'ALERTS_DATA':self.data['ALERTS']})
-    elif 'CREATE' in self.data:
+    elif 'IGNORE_INFO' in self.data:
       GATHER = {'gath_data':self.data}
-      if 'warn_file' in GATHER['gath_data']['CREATE']:
-        if not 'title' in GATHER['gath_data']['CREATE']['warn_file']:
-          GATHER['gath_data']['CREATE']['warn_file'].update({"title":"warn_file.txt"})
-        if not '.' in GATHER['gath_data']['CREATE']['warn_file']['title']:
-          raise Exception("Must declare type of file: " + GATHER['gath_data']['CREATE']['warn_info']['title'])
-        if '.json' in GATHER['gath_data']['CREATE']['warn_file']['write']:
+      if 'ignore' in GATHER['gath_data']['IGNORE_INFO']:
+        if not 'store_in' in GATHER['gath_data']['IGNORE_INFO']['ignore']:
+          GATHER['gath_data']['IGNORE_INFO']['ignore'].update({"store_in":"ignore_data.txt"})
+        if not '.' in GATHER['gath_data']['IGNORE_INFO']['ignore']['store_in']:
+          raise Exception("Must declare type of file: " + GATHER['gath_data']['IGNORE_INFO']['warn_info']['store_in'])
+        if '.json' in GATHER['gath_data']['IGNORE_INFO']['ignore']['store_in']:
           raise Exception("cannot write to .json files")
-        if 'write' in GATHER['gath_data']['CREATE']['warn_file']:
-          write_ = GATHER['gath_data']['CREATE']['warn_file']['write']
-        with open(GATHER['gath_data']['CREATE']['warn_file']['title'],'w') as file:
-            file.write(write_)
-            file.close()
-        self.data.update({'CREATED_FILE_DATA':self.data['CREATE']})
+        if 'REQUEST' in GATHER['gath_data']['IGNORE_INFO']['ignore']:
+          write_ = GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST']
+        if GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST'] in open(GATHER['gath_data']['IGNORE_INFO']['ignore']['from_file'], 'r').read():
+          TO_IGNORE.append(GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST'])
+          self.data_to_upd['IGNORED_DATA_INFO'].update({'return_status':'success'})
+        else:
+          self.data_to_upd['IGNORED_DATA_INFO'].update({'return_status':'failed'})
+        with open(GATHER['gath_data']['IGNORE_INFO']['ignore']['store_in'],'w') as file:
+          file.write('Request Type: Ignore\n')
+          file.write('Ignore Info Found In: ' + GATHER['gath_data']['IGNORE_INFO']['ignore']['from_file'])
+          file.write("\nRequested to ignore: "+write_)
+          if len(TO_IGNORE) > 0:
+            file.write("\nReturn Status: Success")
+          else:
+            file.write("\nReturn Status: Failed, info not found")
+          file.close()
+        self.data.update({'CREATED_FILE_DATA':self.data['IGNORE_INFO']})
     else:
       self.data.update({'EXTENDED_DATA':[{'CREATED_FILE_DATA':None,'ALERTS_DATA':None}]})
     # Reseting the file
@@ -48,6 +61,8 @@ class read_setup_file:
       to_json = json.dumps(reset_data,indent=2,sort_keys=False)
       file.write(to_json)
       file.close()
+    
+    self.data_to_upd.update({'to_ignore_in_all_files':TO_IGNORE})
 
 # Reads the "setup.json"
 def get_alerts(d_t_u,f_d):
