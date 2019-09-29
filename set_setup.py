@@ -15,7 +15,7 @@ class read_setup_file:
     self.data = data
     self.db_data = db_data
 
-  # @NOTE: If there are no "ALERTS" in "setup.json" this class-function will run, yet not do anything
+  # NOTE: This function will not run if specific key data points are not found within setup.json
   def get_data_in_setup(self):
     global ALERTS
     global reset_data
