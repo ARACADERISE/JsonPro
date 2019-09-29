@@ -1,4 +1,5 @@
 import os, json
+from colorama import Fore, Style
 
 # This file will read "setup.json" for anything important
 # Most likely the whole file will be important since it's the setup for "NewJson"
@@ -9,12 +10,13 @@ TO_IGNORE = []
 write_ = ""
 
 class read_setup_file:
-  def __init__(self,data_to_upd,data):
+  def __init__(self,data_to_upd,data,db_data):
     self.data_to_upd = data_to_upd
     self.data = data
+    self.db_data = db_data
 
   # @NOTE: If there are no "ALERTS" in "setup.json" this class-function will run, yet not do anything
-  def get_alerts_in_setup(self):
+  def get_data_in_setup(self):
     global ALERTS
     global reset_data
     global write_
@@ -39,20 +41,23 @@ class read_setup_file:
           raise Exception("cannot write to .json files")
         if 'REQUEST' in GATHER['gath_data']['IGNORE_INFO']['ignore']:
           write_ = GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST']
+        if not 'from_file' in GATHER['gath_data']['IGNORE_INFO']['ignore']:
+          raise Exception('Error: No "from_file" located within setup.json\nCannot locate ' + GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST'] + 'from file of ')
         if GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST'] in open(GATHER['gath_data']['IGNORE_INFO']['ignore']['from_file'], 'r').read():
           TO_IGNORE.append(GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST'])
-          self.data_to_upd['IGNORED_DATA_INFO'].update({'return_status':'success'})
+          self.data_to_upd['IGNORED_DATA_INFO'].update({'status':'success'})
         else:
-          self.data_to_upd['IGNORED_DATA_INFO'].update({'return_status':'failed'})
+          self.data_to_upd['IGNORED_DATA_INFO'].update({'status':'failed'})
           TO_IGNORE.append('no_data')
         with open(GATHER['gath_data']['IGNORE_INFO']['ignore']['store_in'],'w') as file:
-          file.write('Request Type: Ignore\n')
+          if 'ignore' in GATHER['gath_data']['IGNORE_INFO']:
+            file.write('Request Type: Ignore\n')
           file.write('Ignore Info Found In: ' + GATHER['gath_data']['IGNORE_INFO']['ignore']['from_file'])
           file.write("\nRequested to ignore: "+write_)
           if GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST'] == TO_IGNORE[0]:
-            file.write("\nReturn Status: Success")
+            file.write("\nStatus: Success")
           else:
-            file.write("\nReturn Status: Failed, info not found")
+            file.write("\nStatus: Failed, info not found")
           file.close()
         self.data.update({'CREATED_FILE_DATA':self.data['IGNORE_INFO']})
     else:
@@ -63,9 +68,12 @@ class read_setup_file:
       file.write(to_json)
       file.close()
     
-    self.data_to_upd.update({'to_ignore_in_all_files':TO_IGNORE})
+    self.data_to_upd['DEFAULT'].update({'to_ignore_in_all_files':TO_IGNORE})
+    self.db_data['setup_file_info'].append({'IGNORE_DATA':{'request_to_ignore':TO_IGNORE,'found_in_file':GATHER['gath_data']['IGNORE_INFO']['ignore']['from_file'],'status':self.data_to_upd['IGNORED_DATA_INFO']['status']}})
+
+    print(Fore.GREEN+Style.BRIGHT+"[+]" + Fore.WHITE + " Setup file check complete")
 
 # Reads the "setup.json"
-def get_alerts(d_t_u,f_d):
-  r_s_f = read_setup_file(d_t_u,f_d)
-  r_s_f.get_alerts_in_setup()
+def get_data(d_t_u,f_d,db_data):
+  r_s_f = read_setup_file(d_t_u,f_d,db_data)
+  r_s_f.get_data_in_setup()
