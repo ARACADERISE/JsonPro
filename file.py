@@ -5,7 +5,7 @@ from set_setup import *
 USERS_DIR = str(sys.path[0])
 USERS_DIR = os.path.join(USERS_DIR,"")
 FILE_NAME = ""
-DEFAULT_DATA = {"WARNING":["DO NOT DELETE ANY INFORMATION IN THIS FILE AFTER YOU'VE ALREADY HAD THE PROGRAM IMPLEMENT DATA INTO IT"],"DEFAULT":{"return_types":["true","false"]}}
+DEFAULT_DATA = {"WARNING":["DO NOT DELETE ANY INFORMATION IN THIS FILE AFTER YOU'VE ALREADY HAD THE PROGRAM IMPLEMENT DATA INTO IT"],"DEFAULT":{"return_types":["true","false"]},'IGNORED_DATA_INFO':{}}
 FILE_DIR = []
 
 def connect_to_your_file(file_name):
@@ -50,9 +50,9 @@ def inject_default_setting():
       store = {'stored':json.loads(open(FILE_DIR[0],'r').read())}
       DEFAULT_DATA.update({"original_file_data":json.loads(open(FILE_DIR[0],'r').read())})
       get_alerts(DEFAULT_DATA,store['stored'])
-      if 'CREATE' in DEFAULT_DATA['original_file_data']:
-        DEFAULT_DATA.update({'CREATED_FILE_DATA':DEFAULT_DATA['original_file_data']['CREATE']})
-        del(DEFAULT_DATA['original_file_data']['CREATE'])
+      if 'IGNORE_INFO' in DEFAULT_DATA['original_file_data']:
+        DEFAULT_DATA['IGNORED_DATA_INFO'].update({'IGNORED_DATA':DEFAULT_DATA['original_file_data']['IGNORE_INFO']})
+        del(DEFAULT_DATA['original_file_data']['IGNORE_INFO'])
       if 'ALERTS' in DEFAULT_DATA['original_file_data']:
         DEFAULT_DATA.update({'ALERTS_DATA':DEFAULT_DATA['original_file_data']['ALERTS']})
         del(DEFAULT_DATA['original_file_data']['ALERTS'])
@@ -70,7 +70,7 @@ def inject_default_setting():
           break
       except NameError as n_e:
         print(n_e)
-    if 'ALERT' in DEFAULT_DATA['original_file_data']:
+    if 'ALERTS' in DEFAULT_DATA['original_file_data']:
       with open(FILE_DIR[0],'w') as file:
         REPLACE = {}
         to_json = json.dumps(REPLACE)
