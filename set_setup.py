@@ -44,11 +44,12 @@ class read_setup_file:
           self.data_to_upd['IGNORED_DATA_INFO'].update({'return_status':'success'})
         else:
           self.data_to_upd['IGNORED_DATA_INFO'].update({'return_status':'failed'})
+          TO_IGNORE.append('no_data')
         with open(GATHER['gath_data']['IGNORE_INFO']['ignore']['store_in'],'w') as file:
           file.write('Request Type: Ignore\n')
           file.write('Ignore Info Found In: ' + GATHER['gath_data']['IGNORE_INFO']['ignore']['from_file'])
           file.write("\nRequested to ignore: "+write_)
-          if len(TO_IGNORE) > 0:
+          if GATHER['gath_data']['IGNORE_INFO']['ignore']['REQUEST'] == TO_IGNORE[0]:
             file.write("\nReturn Status: Success")
           else:
             file.write("\nReturn Status: Failed, info not found")
