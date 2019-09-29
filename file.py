@@ -37,7 +37,10 @@ def inject_default_setting():
   DB_JSON_DATA = json.loads(opened_db_file)
 
   if DB_JSON_DATA['setup_file_info'] == [] or DB_JSON_DATA['setup_file_info'] == ["error"]:
-    file_name = input('.json File Name: ')
+    print('Loading...')
+    time.sleep(3)
+    os.system('clear')
+    file_name = 'setup.json'
     PATH_OF_FILE = os.path.abspath(file_name)
     # We don't want db.json to be vulnerable to being connected to
     if file_name == 'db.json':
@@ -49,7 +52,7 @@ def inject_default_setting():
       FILE_DIR = [USERS_DIR+file_name]
       store = {'stored':json.loads(open(FILE_DIR[0],'r').read())}
       DEFAULT_DATA.update({"original_file_data":json.loads(open(FILE_DIR[0],'r').read())})
-      get_alerts(DEFAULT_DATA,store['stored'])
+      get_data(DEFAULT_DATA,store['stored'],DB_JSON_DATA)
       if 'IGNORE_INFO' in DEFAULT_DATA['original_file_data']:
         DEFAULT_DATA['IGNORED_DATA_INFO'].update({'IGNORED_DATA':DEFAULT_DATA['original_file_data']['IGNORE_INFO']})
         del(DEFAULT_DATA['original_file_data']['IGNORE_INFO'])
